@@ -1,0 +1,46 @@
+version: '3.7'
+services:
+  api:   
+    build: ./api
+    restart: always
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./api:/code/api
+    environment:
+      - FLASK_DEBUG=True
+    command: python3 ./code/api/flaskapi.py
+    networks:
+      - net
+    depends_on: 
+      - db
+  db:
+    container_name: forumsw_db
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: mdp
+    ports:
+       - 3308:3306
+    volumes:
+      - ../datadb:/var/lib/mysql
+    networks:
+      - net
+  phpmyadmin:
+    container_name: forumsw_phpmyadmin
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+    networks:
+      - net
+    depends_on: 
+      - db
+networks:
+  net: {}
