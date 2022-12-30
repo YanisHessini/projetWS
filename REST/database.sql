@@ -4,19 +4,22 @@ USE trains;
 
 create table IF NOT EXISTS trains (
     id int auto_increment primary key,
-    departure_station text null,
-    arrival_station   text null,
-    departure_date    datetime   null,
-    arrival_date      datetime   null,
-    total_seats       int        not null,
-    nb_class_1        int        not null,
-    nb_class_2        int        not null,
-    nb_class_3        int        not null,
-		price_class_1     int        not null,
-		price_class_2     int        not null,
-		price_class_3     int        not null,
-		complete 					boolean    not null,
-		available_seats   int        not null,
+    departure_station  text null,
+    arrival_station    text null,
+    departure_date     datetime   null,
+    arrival_date       datetime   null,
+    total_seats        int        not null,
+    nb_class_1         int        not null,
+    nb_class_2         int        not null,
+    nb_class_3         int        not null,
+		current_nb_class_1 int 				not null,
+		current_nb_class_2 int 				not null,
+		current_nb_class_3 int 				not null,
+		price_class_1      int        not null,
+		price_class_2      int        not null,
+		price_class_3      int        not null,
+		complete 					 boolean    not null,
+		available_seats    int        not null,
 
 		CONSTRAINT departure_date_before_arrival_date CHECK (departure_date < arrival_date),
 		CONSTRAINT total_seats_greater_than_0 CHECK (total_seats > 0),
@@ -36,9 +39,22 @@ create table IF NOT EXISTS reservations (
 		foreign key (id) references trains(id)
 );
 
-INSERT INTO trains (departure_station, arrival_station, departure_date, arrival_date, total_seats, nb_class_1, nb_class_2, nb_class_3, price_class_1, price_class_2, price_class_3, complete, available_seats)
-SELECT 'Paris', 'Lyon', '2022-12-25 10:00:00', '2022-12-25 12:00:00', 200, 100, 50, 50, 50, 75, 100, 0, 200
+INSERT INTO trains (departure_station, arrival_station, departure_date, arrival_date, total_seats, nb_class_1, nb_class_2, nb_class_3, 
+current_nb_class_1, current_nb_class_2, current_nb_class_3, price_class_1, price_class_2, price_class_3, complete, available_seats)
+SELECT 'Lyon', 'Marseille', '2022-12-26 15:00:00', '2022-12-26 17:00:00', 100, 10, 20, 70, 0, 0, 0, 100, 50, 20, false, 100
 UNION ALL
-SELECT 'Lyon', 'Marseille', '2022-12-26 10:00:00', '2022-12-26 12:00:00', 300, 150, 75, 75, 60, 90, 120, 0, 300
+SELECT 'Paris', 'Marseille', '2022-12-27 10:00:00', '2022-12-27 16:00:00', 100, 10, 20, 70, 0, 0, 0, 100, 50, 20, false, 100
 UNION ALL
-SELECT 'Marseille', 'Paris', '2022-12-27 10:00:00', '2022-12-27 12:00:00', 400, 200, 100, 100, 70, 105, 140, 0, 400;
+SELECT 'Paris', 'Lyon', '2022-12-28 10:00:00', '2022-12-28 14:00:00', 100, 10, 20, 70, 0, 0, 0, 100, 50, 20, false, 100
+UNION ALL
+SELECT 'Lyon', 'Marseille', '2022-12-29 15:00:00', '2022-12-29 17:00:00', 100, 10, 20, 70, 0, 0, 0, 100, 50, 20, false, 100
+UNION ALL
+SELECT 'Paris', 'Marseille', '2022-12-30 10:00:00', '2022-12-30 16:00:00', 100, 10, 20, 70, 0, 0, 0, 100, 50, 20, false, 100
+UNION ALL
+SELECT 'Paris', 'Lyon', '2022-12-31 10:00:00', '2022-12-31 14:00:00', 100, 10, 20, 70, 0, 0, 0, 100, 50, 20, false, 100
+UNION ALL
+SELECT 'Lyon', 'Marseille', '2023-01-01 15:00:00', '2023-01-01 17:00:00', 100, 10, 20, 70, 0, 0, 0, 100, 50, 20, false, 100
+UNION ALL
+SELECT 'Paris', 'Lille', '2023-01-02 10:00:00', '2023-01-02 12:00:00', 100, 10, 20, 70, 0, 0, 0, 100, 50, 20, false, 100
+UNION ALL
+SELECT 'Lille', 'Paris', '2023-01-03 10:00:00', '2023-01-03 12:00:00', 100, 10, 20, 70, 0, 0, 0, 100, 50, 20, false, 100
