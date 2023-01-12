@@ -1,0 +1,83 @@
+version: '3.7'
+services:
+  # Flask
+  api:   
+    build: ./REST/api
+    restart: always
+    ports:
+      - 5000:5000
+    volumes:
+      - ./REST/api:/code/api
+    environment:
+      - FLASK_DEBUG=True
+    command: python ./code/api/flaskapi.py
+    networks:
+      - net
+    depends_on: 
+      - db
+
+  # MySQL
+  db:
+    container_name: forumsw_db
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: mdp
+    ports:
+       - 3306:3306
+    
+    # Le volume créé des problèmes avec WSL. On le désactive ?
+    volumes:
+      # - ./datadb:/var/lib/mysql
+      - container-volume:/var/lib/mysql
+      - ./REST/database.sql:/docker-entrypoint-initdb.d/database.sql
+    networks:
+      - net
+
+  # DB Browser
+  phpmyadmin:
+    container_name: forumsw_phpmyadmin
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+    networks:
+      - net
+    depends_on: 
+      - db
+
+  adminer:
+    container_name: forumsw_adminer
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
+    networks:
+      - net
+    depends_on: 
+      - db
+
+  # SOAP Server
+  soap-api:
+    build: ./api
+    restart: always
+    ports: 
+      - 8050:8050
+    networks:
+      - net
+    volumes:
+      - ./api:/api
+    command: python3 /api/soapapi.py
+
+networks:
+  net: 
+    driver: bridge
+
+volumes:
+  container-volume:
