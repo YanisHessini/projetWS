@@ -18,7 +18,7 @@ services:
 
   # MySQL
   db:
-    container_name: forumsw_db
+    container_name: trains_db
     image: mysql:latest
     restart: always
     environment:
@@ -38,7 +38,7 @@ services:
 
   # DB Browser
   phpmyadmin:
-    container_name: forumsw_phpmyadmin
+    container_name: trains_phpmyadmin
     image: phpmyadmin
     restart: always
     ports:
@@ -53,7 +53,7 @@ services:
       - db
 
   adminer:
-    container_name: forumsw_adminer
+    container_name: trains_adminer
     image: adminer
     restart: always
     ports:
@@ -65,14 +65,14 @@ services:
 
   # SOAP Server
   soap-api:
-    build: ./api
+    build: ./SOAP/api
     restart: always
     ports: 
       - 8050:8050
     networks:
       - net
     volumes:
-      - ./api:/api
+      - ./SOAP/api:/api
     command: python3 /api/soapapi.py
 
 networks:
