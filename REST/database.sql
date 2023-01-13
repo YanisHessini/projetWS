@@ -33,10 +33,11 @@ create table IF NOT EXISTS trains (
 
 create table IF NOT EXISTS reservations (
     id int auto_increment primary key,
-    class_1 int not null,
-    class_2 int not null,
-    class_3 int not null,
-		foreign key (id) references trains(id)
+    first_name text null,
+    last_name text null,
+    id_train int not null,
+	class int not null,
+		foreign key (id_train) references trains(id)
 );
 
 INSERT INTO trains (departure_station, arrival_station, departure_date, arrival_date, total_seats, nb_class_1, nb_class_2, nb_class_3, 
