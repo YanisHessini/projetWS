@@ -11,6 +11,7 @@
 7. `GET /trains/available/` : liste des trains disponibles
 8. `GET /trains/prices/` : liste des prix des trajets de trains
 9. `POST /trains/book/` : réserver un trajet de train, avec un *ID* et une *classe*. 
+10. `GET /trains/book/<id>` : liste des réservations d'un trajet de train d'identifiant `<id>`
 
 
 ## SOAP

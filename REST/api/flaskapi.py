@@ -342,6 +342,24 @@ def get_train_full():
 
 	return myresult
 
+# Route donnant les réservations d'un utilisateur
+
+@app.route("/trains/book/<id>",methods=['GET'])
+def get_user_bookings(id):
+	mycursor = mydb.cursor()
+	mycursor.execute("SELECT * FROM bookings WHERE user_id = %s", (id, ))
+	myresult = []
+	for r in mycursor.fetchall():
+		myresult.append(
+			{
+				'id':r[0],
+				'first_name':r[1],
+				'last_name':r[2],
+				'id_train':r[3],
+				'class':r[4],
+			})
+
+	return myresult
 
 # faire quelque chose d'utile avec la connexion
 
