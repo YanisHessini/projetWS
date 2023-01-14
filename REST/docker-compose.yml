@@ -1,6 +1,7 @@
 version: '3.7'
 services:
   api:   
+    container_name: webservice_api
     build: ./api
     restart: always
     ports:
@@ -15,7 +16,7 @@ services:
     depends_on: 
       - db
   db:
-    container_name: forumsw_db
+    container_name: webservice_db
     image: mysql:latest
     restart: always
     environment:
@@ -29,7 +30,7 @@ services:
     networks:
       - net
   phpmyadmin:
-    container_name: forumsw_phpmyadmin
+    container_name: webservice_phpmyadmin
     image: phpmyadmin
     restart: always
     ports:
