@@ -4,10 +4,10 @@ services:
     build: ./Front
     restart: always
     ports:
-      - 3000:8080
+      - 3000:3000
     volumes:
       - ./Front/src:/app/src
-    command: npm run serve
+    command: npm run devnet
     networks:
       - net
     depends_on: 

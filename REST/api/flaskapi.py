@@ -141,7 +141,6 @@ def get_train_arrival(arrival):
 
 	return myresult
 
-		
 
 # Route basée sur une période de temps, à partir d'une date, sous format heure, jour, mois
 @app.route("/trains/period/<period>",methods=['GET'])
@@ -216,6 +215,8 @@ def get_train_stations():
 @app.route("/trains/available",methods=['GET'])
 def get_train_available():
 	mycursor = mydb.cursor()
+	# TODO : Ajouter la condition sur la date de départ
+	# mycursor.execute("SELECT * FROM trains WHERE available_seats > 0 AND departure_date > NOW()")
 	mycursor.execute("SELECT * FROM trains WHERE available_seats > 0")
 	myresult = []
 	for r in mycursor.fetchall():
@@ -357,6 +358,50 @@ def get_user_bookings(id):
 				'last_name':r[2],
 				'id_train':r[3],
 				'class':r[4],
+			})
+
+	return myresult
+
+# Route permettant de faire une recherche avec tous les critères
+# Départ, arrivée, date de départ, date d'arrivée, classe, nombres de tickets à réserver
+
+@app.route("/trains/search",methods=['GET'])
+def search_train():
+	departure_station = request.args.get('departure_station')
+	arrival_station = request.args.get('arrival_station')
+	departure_date = request.args.get('departure_date')
+	arrival_date = request.args.get('arrival_date')
+	passenger_class = request.args.get('passenger_class')
+	nb_tickets = request.args.get('nb_tickets')
+
+	mycursor = mydb.cursor()
+	# Dates are in the format YYYY-MM-DD HH:MM:SS, but we only need the date part
+	query = "SELECT * FROM trains WHERE departure_station = '" + departure_station + "' AND arrival_station = '" + arrival_station + "' \
+	AND departure_date LIKE '" + departure_date + "%' AND arrival_date LIKE '" + arrival_date + "%' \
+	AND nb_class_" + passenger_class + " >= " + nb_tickets + " AND available_seats >= " + nb_tickets
+
+	mycursor.execute(query)
+	myresult = []
+	for r in mycursor.fetchall():
+		myresult.append(
+			{
+				'id':r[0],
+				'departure_station':r[1],
+				'arrival_station':r[2],
+				'departure_date':r[3],
+				'arrival_date':r[4],
+				'total_seats':r[5],
+				'nb_class_1':r[6],
+				'nb_class_2':r[7],
+				'nb_class_3':r[8],
+				'current_nb_class_1':r[9],
+				'current_nb_class_2':r[10],
+				'current_nb_class_3':r[11],
+				'price_class_1':r[12],
+				'price_class_2':r[13],
+				'price_class_3':r[14],
+				'completed':r[15],
+				'available_seats':r[16]
 			})
 
 	return myresult
