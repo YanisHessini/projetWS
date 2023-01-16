@@ -23,8 +23,8 @@
     "tailwind": "^4.0.0",
     "vue-i18n": "^9.1.10",
 		"soap": "^1.0.0",
-		"easy-soap-request": "^1.6.0",
-		"@iconify/vue": "^1.1.5"
+		"easy-soap-request": "^5.2.0",
+		"@iconify/vue": "^4.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
@@ -54,8 +54,8 @@
     "vite-svg-loader": "^3.4.0",
     "vue-tsc": "^0.38.2",
 		"soap": "^1.0.0",
-		"easy-soap-request": "^1.6.0",
-		"@iconify/vue": "^1.1.5"
+		"easy-soap-request": "^5.2.0",
+		"@iconify/vue": "^4.0.2"
   },
   "eslintConfig": {
     "root": true,
