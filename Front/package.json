@@ -24,7 +24,9 @@
     "vue-i18n": "^9.1.10",
 		"soap": "^1.0.0",
 		"easy-soap-request": "^5.2.0",
-		"@iconify/vue": "^4.0.2"
+		"@iconify/vue": "^4.0.2",
+		"vue-tailwind": "^2.5.1",
+		"@tailwindcss/forms": "^0.5.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
@@ -55,7 +57,9 @@
     "vue-tsc": "^0.38.2",
 		"soap": "^1.0.0",
 		"easy-soap-request": "^5.2.0",
-		"@iconify/vue": "^4.0.2"
+		"@iconify/vue": "^4.0.2",
+		"vue-tailwind": "^2.5.1",
+		"@tailwindcss/forms": "^0.5.3"
   },
   "eslintConfig": {
     "root": true,

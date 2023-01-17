@@ -10,6 +10,7 @@ dispatcher = SoapDispatcher(
 location = "http://127.0.0.1:8050/",
 action = 'http://127.0.0.1:8050/', # SOAPAction
 namespace = "http://example.com/sample.wsdl", prefix="ns0",
+headers = "Access-Control-Allow-Origin: *",
 trace = True,
 ns = True)
 
@@ -82,7 +83,57 @@ dispatcher.register_function('GetTrainsSearch', gettrainssearch,
 			'nbTickets': int
 		})
 
+
+# book train function and registering
+
+def booktrain(firstName, lastName, trainId, passClass):
+		# Get request to the API
+		response = requests.post("http://" + ip + ":" + port + "/trains/book", json={
+			"1": {
+				'first_name': firstName,
+				'last_name': lastName,
+				'id_train': str(trainId),
+				'class': str(passClass),
+			}
+			})
+
+		return {'statusCode':response.status_code,'bookingResponse':response.text}
+
+dispatcher.register_function('BookTrain', booktrain,
+		returns={
+			'statusCode': int,
+			'bookingResponse': str,
+		},
+		args={
+			'firstName': str,
+			'lastName': str,
+			'trainId': int,
+			'passClass': int,
+		})
+
+
+class MySOAPHandler(SOAPHandler):
+	def do_OPTIONS(self):
+		self.send_response(200)       
+		# Echo back origin field
+		self.send_header('Access-Control-Allow-Origin', self.headers['Origin'])
+		self.send_header('Access-Control-Allow-Credentials', 'true')
+
+		# Echo back Access Control Request headers
+		self.send_header('Access-Control-Allow-Headers', self.headers['Access-Control-Request-Headers'])
+
+		self.send_header("Access-Control-Max-Age", "1")
+		self.end_headers()
+	
+	def do_POST(self):
+		self.send_response(200)
+		self.send_header('Access-Control-Allow-Origin', self.headers['Origin'])
+		self.end_headers()
+
+		SOAPHandler.do_POST(self)
+		
+
 print("Starting server...")
-httpd = HTTPServer(("", 8050), SOAPHandler)
+httpd = HTTPServer(("", 8050), MySOAPHandler)
 httpd.dispatcher = dispatcher
 httpd.serve_forever()
