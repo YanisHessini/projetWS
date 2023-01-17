@@ -59,3 +59,46 @@ UNION ALL
 SELECT 'Paris', 'Lille', '2023-01-02 10:00:00', '2023-01-02 12:00:00', 100, 10, 20, 70, 0, 0, 0, 100, 50, 20, false, 100
 UNION ALL
 SELECT 'Lille', 'Paris', '2023-01-03 10:00:00', '2023-01-03 12:00:00', 100, 10, 20, 70, 0, 0, 0, 100, 50, 20, false, 100
+;
+
+-- Trigger to decrease the number of available seats when a reservation is made
+DELIMITER //
+CREATE TRIGGER decrease_available_seats
+AFTER INSERT ON reservations
+FOR EACH ROW
+BEGIN
+	IF NEW.class = 1 THEN
+		UPDATE trains SET current_nb_class_1 = current_nb_class_1 + 1, available_seats = available_seats - 1 WHERE id = NEW.id_train;
+	ELSEIF NEW.class = 2 THEN
+		UPDATE trains SET current_nb_class_2 = current_nb_class_2 + 1, available_seats = available_seats - 1 WHERE id = NEW.id_train;
+	ELSEIF NEW.class = 3 THEN
+		UPDATE trains SET current_nb_class_3 = current_nb_class_3 + 1, available_seats = available_seats - 1 WHERE id = NEW.id_train;
+	END IF;
+END;
+
+
+-- -- Trigger to increase the number of available seats when a reservation is deleted
+CREATE TRIGGER increase_available_seats
+AFTER DELETE ON reservations
+FOR EACH ROW
+BEGIN
+	IF OLD.class = 1 THEN
+		UPDATE trains SET current_nb_class_1 = current_nb_class_1 - 1, available_seats = available_seats + 1 WHERE id = OLD.id_train;
+	ELSEIF OLD.class = 2 THEN
+		UPDATE trains SET current_nb_class_2 = current_nb_class_2 - 1, available_seats = available_seats + 1 WHERE id = OLD.id_train;
+	ELSEIF OLD.class = 3 THEN
+		UPDATE trains SET current_nb_class_3 = current_nb_class_3 - 1, available_seats = available_seats + 1 WHERE id = OLD.id_train;
+	END IF;
+END;
+
+
+-- -- Trigger to set the complete field to true when all the seats are booked
+CREATE TRIGGER set_complete
+AFTER UPDATE ON trains
+FOR EACH ROW
+BEGIN
+	IF NEW.available_seats = 0 THEN
+		UPDATE trains SET complete = true WHERE id = NEW.id;
+	END IF;
+END;
+DELIMITER ; 

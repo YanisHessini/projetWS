@@ -7,8 +7,9 @@ import json
 import base64
 
 app = Flask(__name__)
-cors = CORS(app)
+cors = CORS(app, resources={r"*": {"origins": "*"}})
 app.config['CORS_HEADERS'] = 'Content-Type'
+
 
 @app.route("/")
 def hello_world():
@@ -141,7 +142,6 @@ def get_train_arrival(arrival):
 
 	return myresult
 
-		
 
 # Route basée sur une période de temps, à partir d'une date, sous format heure, jour, mois
 @app.route("/trains/period/<period>",methods=['GET'])
@@ -216,6 +216,8 @@ def get_train_stations():
 @app.route("/trains/available",methods=['GET'])
 def get_train_available():
 	mycursor = mydb.cursor()
+	# TODO : Ajouter la condition sur la date de départ
+	# mycursor.execute("SELECT * FROM trains WHERE available_seats > 0 AND departure_date > NOW()")
 	mycursor.execute("SELECT * FROM trains WHERE available_seats > 0")
 	myresult = []
 	for r in mycursor.fetchall():
@@ -281,34 +283,39 @@ def get_train_prices():
 # Route qui permet de réserver un billet, incrémentant le nombre de places réservées pour la classe donnée
 @app.route("/trains/book",methods=['POST'])
 def book_train():
+	# JSON contains several JSON objects, with first_name, last_name, id_train, class
 	data = request.get_json()
 
-	# On vérifie si le train est complet
-	mycursor = mydb.cursor()
-	mycursor.execute("SELECT * FROM trains WHERE id = %s", (data['id'], ))
-	train = mycursor.fetchone()
-	
-	# Si la classe demandée est pleine, on renvoie une erreur
-	if train[8+int(data['class'])] == train[5+int(data['class'])]:
-		return "Le train n°" + str(data['id']) + " est complet pour la classe " + str(data['class']) + ".", 400
+	# On vérifie si le train a assez de places pour le nombre de personnes demandées et la classe
 
-	mycursor = mydb.cursor()
-	query = "UPDATE trains SET current_nb_class_" + data['class'] + " = current_nb_class_" + data['class'] + " + 1 WHERE id = " + data['id'] + " AND current_nb_class_" + data['class'] + " < nb_class_" + data['class']
-	mycursor.execute(query)
-	mydb.commit()
+	numTrains = len(data)
+	print(numTrains, file=sys.stderr)
+
+	# On ajoute toutes les réservations
+
+	for trainJson in data:
+		# On vérifie si le train est complet avec numTrains
+		mycursor = mydb.cursor()
+		mycursor.execute("SELECT * FROM trains WHERE id = %s", (data[trainJson]['id_train'], ))
+		train = mycursor.fetchone()
+
+		# utiliser la colonne current_nb_class_1, current_nb_class_2, current_nb_class_3 selon la classe demandée
+
+		if train[9] + numTrains > train[6] and data[trainJson]['class'] == '1':
+			return "Le train n°" + str(data[trainJson]['id_train']) + " n'a pas assez de places en première classe.", 400
+		elif train[10] + numTrains > train[7] and data[trainJson]['class'] == '2':
+			return "Le train n°" + str(data[trainJson]['id_train']) + " n'a pas assez de places en deuxième classe.", 400
+		elif train[11] + numTrains > train[8] and data[trainJson]['class'] == '3':
+			return "Le train n°" + str(data[trainJson]['id_train']) + " n'a pas assez de places en troisième classe.", 400
 
 
+		mycursor = mydb.cursor()
+		query = "INSERT INTO reservations (first_name, last_name, id_train, class) VALUES (%s, %s, %s, %s)"
+		val = (data[trainJson]['first_name'], data[trainJson]['last_name'], data[trainJson]['id_train'], data[trainJson]['class'])
+		mycursor.execute(query, val)
+		mydb.commit()
 
-
-	mycursor = mydb.cursor()
-	query = "SELECT price_class_" + data['class'] + " FROM trains WHERE id = " + data['id']
-	mycursor.execute(query)
-	price = mycursor.fetchone()[0]
-
-	
-
-	return "Billet pour le train n°" + data['id'] + " réservé pour la classe " + data['class'] + " au prix de " + str(price) + " €."
-	
+	return "Réservation de " + str(numTrains) + " billets pour le train n°" + str(data[trainJson]['id_train']) + " effectuée avec succès.", 200
 
 
 # Route donnant les trains complets
@@ -357,6 +364,50 @@ def get_user_bookings(id):
 				'last_name':r[2],
 				'id_train':r[3],
 				'class':r[4],
+			})
+
+	return myresult
+
+# Route permettant de faire une recherche avec tous les critères
+# Départ, arrivée, date de départ, date d'arrivée, classe, nombres de tickets à réserver
+
+@app.route("/trains/search",methods=['GET'])
+def search_train():
+	departure_station = request.args.get('departure_station')
+	arrival_station = request.args.get('arrival_station')
+	departure_date = request.args.get('departure_date')
+	arrival_date = request.args.get('arrival_date')
+	passenger_class = request.args.get('passenger_class')
+	nb_tickets = request.args.get('nb_tickets')
+
+	mycursor = mydb.cursor()
+	# Dates are in the format YYYY-MM-DD HH:MM:SS, but we only need the date part
+	query = "SELECT * FROM trains WHERE departure_station = '" + departure_station + "' AND arrival_station = '" + arrival_station + "' \
+	AND departure_date LIKE '" + departure_date + "%' AND arrival_date LIKE '" + arrival_date + "%' \
+	AND nb_class_" + passenger_class + " >= " + nb_tickets + " AND available_seats >= " + nb_tickets
+
+	mycursor.execute(query)
+	myresult = []
+	for r in mycursor.fetchall():
+		myresult.append(
+			{
+				'id':r[0],
+				'departure_station':r[1],
+				'arrival_station':r[2],
+				'departure_date':r[3],
+				'arrival_date':r[4],
+				'total_seats':r[5],
+				'nb_class_1':r[6],
+				'nb_class_2':r[7],
+				'nb_class_3':r[8],
+				'current_nb_class_1':r[9],
+				'current_nb_class_2':r[10],
+				'current_nb_class_3':r[11],
+				'price_class_1':r[12],
+				'price_class_2':r[13],
+				'price_class_3':r[14],
+				'completed':r[15],
+				'available_seats':r[16]
 			})
 
 	return myresult
