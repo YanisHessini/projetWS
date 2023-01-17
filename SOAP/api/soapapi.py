@@ -2,7 +2,11 @@ from pysimplesoap.server import SoapDispatcher, SOAPHandler, WSGISOAPHandler
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import requests
 
-ip = "192.168.73.255"
+class MyListContainer:
+    def __init__(self, data):
+        self.data = data
+
+ip = "192.168.1.254"
 port = "5000"
 
 dispatcher = SoapDispatcher(
@@ -30,12 +34,13 @@ dispatcher.register_function('InitiateTransfer', settransactiondetails,
 def getalltrains():
 		# Get request to the API
 		response = requests.get("http://" + ip + ":" + port + "/trains")
+		print(response)
 		return {'statusCode':response.status_code,'trainsJson':response.text}
 
 dispatcher.register_function('GetAllTrains', getalltrains,
 		returns={
 			'statusCode': int,
-			'trainsJson': str,
+			'trainsJson': {},
 		},
 		args={})
 
