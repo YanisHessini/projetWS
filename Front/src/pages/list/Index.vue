@@ -35,7 +35,7 @@ const getAllTrains = async () => {
 		const { response } = await soapRequest({ url: url, headers: getheaders, xml: xml, timeout: 1000 }); // Optional timeout parameter(milliseconds)
 		const { headers, body, statusCode } = response;
 
-		// Isolate	 <trainsJson> from the response
+		// Isolate <trainsJson> from the response
 		trains.trainsJson = body.substring(body.indexOf("<trainsJson>") + 12, body.indexOf("</trainsJson>"));
 		// Parse the string that has &quot
 
@@ -99,8 +99,6 @@ const changeModalId = (id) => {
 	console.log(modal.id)
 }
 
-
-
 onMounted(() => {
 	getAllTrains();
 });
@@ -132,7 +130,7 @@ onMounted(() => {
 					<th>Dispos</th>
 					<th>Réserver</th>
 				</thead>
-				<tr v-for="train in trains.displayJson" :key="train.id" class="bg-gray-100  hover:bg-blue-100"
+				<tr v-for="train in trains.trainsJson" :key="train.id" class="bg-gray-100  hover:bg-blue-100"
 					@click="">
 					<td class="justify-center items-center p-2">{{ train.departure_station }}</td>
 					<td>{{ train.departure_date }}</td>
@@ -153,7 +151,7 @@ onMounted(() => {
 									<label class ="label mt-2">
 										<span class="font-bold">Numéro de train</span>
 									</label>
-										<input type="text" v-bind:placeholder="modal.id" class="input-borderedw-full max-w-xs rounded-lg bg-gray-100" disabled />
+										<input type="text" class="input-borderedw-full max-w-xs rounded-lg bg-gray-100" disabled />
 
 									<label class ="label mt-2">
 										<span class="font-bold">Départ</span>

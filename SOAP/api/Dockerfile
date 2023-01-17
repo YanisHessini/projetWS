@@ -1,6 +1,10 @@
 FROM python
 
-RUN pip3 install pysimplesoap
-RUN python -m pip install --upgrade pip
+RUN wget https://github.com/YanisHessini/pysimplesoap/archive/refs/heads/master.zip
+
+RUN unzip master.zip
+
+RUN cd pysimplesoap-master && python setup.py install
+
+# RUN pip install --no-dependencies git+https://github.com/mikelo/pysimplesoap.git@master
 RUN pip install requests
-RUN pip install soapfish2
