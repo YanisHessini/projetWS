@@ -1,8 +1,10 @@
 from pysimplesoap.server import SoapDispatcher, SOAPHandler, WSGISOAPHandler
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import requests
+import socket
+import sys
 
-ip = "192.168.1.45"
+ip = "projetws-api-1"
 port = "5000"
 
 dispatcher = SoapDispatcher(
@@ -10,7 +12,6 @@ dispatcher = SoapDispatcher(
 location = "http://127.0.0.1:8050/",
 action = 'http://127.0.0.1:8050/', # SOAPAction
 namespace = "http://example.com/sample.wsdl", prefix="ns0",
-headers = "Access-Control-Allow-Origin: *",
 trace = True,
 ns = True)
 

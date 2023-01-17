@@ -63,34 +63,7 @@ const getAllTrains = async () => {
 	}
 };
 
-const bookTrain = async (id) => {
-	try {
-		const bookheaders = {
-			'Content-Type': 'text/xml;charset=UTF-8',
-			'SOAPAction': url + 'BookTrain',
-			'Accept': 'text/xml',
-		};
 
-		const xml =
-			`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="http://example.com/sample.wsdl">
-	 		<soapenv:Body>
-		 		<tns:BookTrain>
-					<tns:firstName>Yanis</tns:firstName>
-					<tns:lastName>Hessini</tns:lastName>
-					<tns:trainId>1</tns:trainId>
-					<tns:passClass>1</tns:passClass>
-		 		</tns:BookTrain>
-	 		</soapenv:Body>
-			</soapenv:Envelope>`;
-
-		const { response } = await soapRequest({ url: url, headers: bookheaders, xml: xml, timeout: 1000 }); // Optional timeout parameter(milliseconds)
-
-		console.log(response.body.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&'))
-
-	} catch (e) {
-		console.log(e.response.data);
-	}
-};
 
 const changeModalId = (id) => {
 	console.log(modal.id);
