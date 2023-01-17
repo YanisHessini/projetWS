@@ -101,7 +101,7 @@ const cancelBooking = async (id:any) => {
 
     <div class="mt-5 md:col-span-2 md:mt-0">
         <div class="flex flex-col justify-center items-center mt-10">
-		    <h1 class="text-4xl font-bold text-gray-800">Réservations</h1>
+		    <h1 class="text-4xl font-bold text-slate-100 p-6 rounded-xl shadow bg-black">Réservations</h1>
 	    </div>
         <form v-on:submit.prevent="searchReservations">
           <div class="overflow-hidden shadow sm:rounded-md">
