@@ -14,18 +14,6 @@ headers = "Access-Control-Allow-Origin: *",
 trace = True,
 ns = True)
 
-#Function
-def settransactiondetails(sessionId,msisdn,amount,language):
-		#Some Code here
-		#And more code here
-		sid = "test"
-		return {'sessionId':sid,'responseCode':0}
-
-# register the user function
-dispatcher.register_function('InitiateTransfer', settransactiondetails,
-    returns={'sessionId': str,'responseCode':int}, 
-    args={'sessionId': str,'msisdn': str,'amount': str,'language': str})
-
 
 # get all the trains function and registering
 def getalltrains():
@@ -53,6 +41,19 @@ dispatcher.register_function('GetTrainsByDate', gettrainsbydate,
 			'trainsJson': str,
 		},
 		args={'date': str})
+
+# get trains by id function 
+def gettrainsbyid(id):
+		# Get request to the API
+		response = requests.get("http://" + ip + ":" + port + "/trains/id/" + id)
+		return {'statusCode':response.status_code,'trainsJson':response.text}
+
+dispatcher.register_function('GetTrainsById', gettrainsbyid,
+		returns={
+			'statusCode': int,
+			'trainsJson': str,
+		},
+		args={'id': str})
 
 # get trains with exhaustive search function and registering
 

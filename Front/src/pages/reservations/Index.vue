@@ -136,7 +136,7 @@ const cancelBooking = async (id:any) => {
                     <th>Classe</th>
                     <th>Annuler</th>
                 </thead>
-                <tr class="bg-gray-100  hover:bg-blue-100">
+                <tr class="bg-gray-100 ">
                     <td class="justify-center items-center p-2">{{ reservation.departure_station }}</td>
                     <td>{{ reservation.departure_date }}</td>
                     <td>{{ reservation.arrival_station }}</td>

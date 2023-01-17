@@ -53,7 +53,7 @@ mydb = mysql.connector.connect(
 )
 
 # Route basée sur l'ID du train
-@app.route("/trains/<id>",methods=['GET'])
+@app.route("/trains/id/<id>",methods=['GET'])
 @cross_origin()
 def get_train(id):
 	mycursor = mydb.cursor()
@@ -358,7 +358,7 @@ def get_train_full():
 
 # Route donnant les réservations d'un utilisateur
 
-@app.route("/trains/book/<id>",methods=['GET'])
+@app.route("/trains/booking/<id>",methods=['GET'])
 def get_user_bookings(id):
 	mycursor = mydb.cursor()
 	mycursor.execute("SELECT * FROM reservations WHERE user_id = %s", (id, ))

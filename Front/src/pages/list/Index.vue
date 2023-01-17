@@ -140,36 +140,12 @@ onMounted(() => {
 					<td>{{ train.arrival_date }}</td>
 					<td>{{ train.available_seats }}</td>
 					<td class="flex justify-around items-center">
-						<label for="book" class="btn" >
-							<Icon icon="mdi:seat" class="text-3xl" />
-						</label>
-
-						<input v-bind:name="train.id" type="checkbox" id="book" class="modal-toggle"/>
-						<label for="book" class="modal cursor-pointer">
-							<label class="modal-box relative" for="">
-								<h3 v-bind:name="train.id" class="text-lg font-bold">Réserver pour le train</h3>
-								
-								<div class = "form-control w-full max-w-xs mt-5">
-									<label class ="label mt-2">
-										<span class="font-bold">Numéro de train</span>
-									</label>
-										<input type="text" v-bind:placeholder="modal.id" class="input-borderedw-full max-w-xs rounded-lg bg-gray-100" disabled />
-
-									<label class ="label mt-2">
-										<span class="font-bold">Départ</span>
-									</label>
-										<input type="text" class="input-bordered w-full max-w-xs rounded-lg bg-gray-100" disabled />
-
-									<label class ="label mt-2">
-										<span class="font-bold">Destination</span>
-									</label>
-										<input type="text" class="input-bordered w-full max-w-xs rounded-lg bg-gray-100" disabled />
-
-								</div>
+						<router-link :to="{ path: '/reserver', query: { id_train: train.id }}"> 
+							<label for="book" class="btn" >
+								<Icon icon="mdi:seat" class="text-3xl" />
 								
 							</label>
-						</label>
-
+						</router-link>
 					</td>
 				</tr>
 			</table>
