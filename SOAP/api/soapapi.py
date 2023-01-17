@@ -83,24 +83,39 @@ dispatcher.register_function('GetTrainsSearch', gettrainssearch,
 			'nbTickets': int
 		})
 
-# get trains with a user
+# get booking with a user
 
-def gettrainssearchuser(firstName, lastName):
+def getbookinguser(firstName, lastName):
 		# Get request to the API, params are in snake case
 		response = requests.get("http://" + ip + ":" + port + "/trains/search/user/"+str(firstName)+"-"+str(lastName))
 
-		return {'statusCode':response.status_code,'trainsJson':response.text}
+		return {'statusCode':response.status_code,'bookingJson':response.text}
 
-dispatcher.register_function('GetTrainsSearchUser', gettrainssearchuser,
+dispatcher.register_function('GetBookingUser', getbookinguser,
 		returns={
 			'statusCode': int,
-			'trainsJson': str,
+			'bookingJson': str,
 		},
 		args={
 			'firstName': str,
 			'lastName': str,
 		})
 
+# cancel a booking with its id
+
+def cancelbooking(id):
+		# Get request to the API
+		response = requests.delete("http://" + ip + ":" + port + "/trains/cancel/"+str(id))
+
+		return {'statusCode':response.status_code}
+
+dispatcher.register_function('CancelBooking', cancelbooking,
+		returns={
+			'statusCode': int
+		},
+		args={
+			'id': str,
+		})
 
 
 # book train function and registering

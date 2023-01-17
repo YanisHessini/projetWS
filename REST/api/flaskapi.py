@@ -279,6 +279,13 @@ def get_train_prices():
 
 	return myresult
 	
+@app.route("/trains/cancel/<id>",methods=['DELETE'])
+def cancel_booking(id):
+
+	mycursor = mydb.cursor()
+	mycursor.execute("DELETE FROM reservations WHERE id = %s", (id, ))
+	mydb.commit()
+	return {"status_code":200}
 
 # Route qui permet de réserver un billet, incrémentant le nombre de places réservées pour la classe donnée
 @app.route("/trains/book",methods=['POST'])
@@ -354,7 +361,7 @@ def get_train_full():
 @app.route("/trains/book/<id>",methods=['GET'])
 def get_user_bookings(id):
 	mycursor = mydb.cursor()
-	mycursor.execute("SELECT * FROM bookings WHERE user_id = %s", (id, ))
+	mycursor.execute("SELECT * FROM reservations WHERE user_id = %s", (id, ))
 	myresult = []
 	for r in mycursor.fetchall():
 		myresult.append(
@@ -412,8 +419,7 @@ def search_train():
 
 	return myresult
 
-# Route permettant de faire une recherche avec tous les critères
-# Départ, arrivée, date de départ, date d'arrivée, classe, nombres de tickets à réserver
+# Route permettant d'avoir toutes les réservations d'un utilisateur avec son Prenom-Nom'
 
 @app.route("/trains/search/user/<user>",methods=['GET'])
 def search_train_user(user):
@@ -423,19 +429,20 @@ def search_train_user(user):
 
 	mycursor = mydb.cursor()
 	# Dates are in the format YYYY-MM-DD HH:MM:SS, but we only need the date part
-	query = "SELECT trains.id, departure_station, arrival_station, departure_date, arrival_date, class FROM trains JOIN reservations ON trains.id = reservations.id_train WHERE reservations.first_name = '"+name+"' AND reservations.last_name = '"+last_name+"';" 
+	query = "SELECT reservations.id, trains.id, departure_station, arrival_station, departure_date, arrival_date, class FROM trains JOIN reservations ON trains.id = reservations.id_train WHERE reservations.first_name = '"+name+"' AND reservations.last_name = '"+last_name+"';" 
 
 	mycursor.execute(query)
 	myresult = []
 	for r in mycursor.fetchall():
 		myresult.append(
 			{
-				'id':r[0],
-				'departure_station':r[1],
-				'arrival_station':r[2],
-				'departure_date':r[3],
-				'arrival_date':r[4],
-				'class':r[5],
+				'id_reservation':r[0],
+				'id_train':r[1],
+				'departure_station':r[2],
+				'arrival_station':r[3],
+				'departure_date':r[4],
+				'arrival_date':r[5],
+				'class':r[6],
 			})
 
 	return myresult
