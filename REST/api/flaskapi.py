@@ -412,6 +412,34 @@ def search_train():
 
 	return myresult
 
+# Route permettant de faire une recherche avec tous les critères
+# Départ, arrivée, date de départ, date d'arrivée, classe, nombres de tickets à réserver
+
+@app.route("/trains/search/user/<user>",methods=['GET'])
+def search_train_user(user):
+	user_split = user.split('-')
+	name = user_split[0]
+	last_name = user_split[1]
+
+	mycursor = mydb.cursor()
+	# Dates are in the format YYYY-MM-DD HH:MM:SS, but we only need the date part
+	query = "SELECT trains.id, departure_station, arrival_station, departure_date, arrival_date, class FROM trains JOIN reservations ON trains.id = reservations.id_train WHERE reservations.first_name = '"+name+"' AND reservations.last_name = '"+last_name+"';" 
+
+	mycursor.execute(query)
+	myresult = []
+	for r in mycursor.fetchall():
+		myresult.append(
+			{
+				'id':r[0],
+				'departure_station':r[1],
+				'arrival_station':r[2],
+				'departure_date':r[3],
+				'arrival_date':r[4],
+				'class':r[5],
+			})
+
+	return myresult
+
 # faire quelque chose d'utile avec la connexion
 
 if __name__ == "__main__":

@@ -34,17 +34,12 @@ const getAllTrains = async () => {
 
 		const { response } = await soapRequest({ url: url, headers: getheaders, xml: xml, timeout: 1000 }); // Optional timeout parameter(milliseconds)
 		const { headers, body, statusCode } = response;
-		console.log(headers);
-		console.log(statusCode);
 
-		// Isolate <trainsJson> from the response
-
+		// Isolate	 <trainsJson> from the response
 		trains.trainsJson = body.substring(body.indexOf("<trainsJson>") + 12, body.indexOf("</trainsJson>"));
-
 		// Parse the string that has &quot
 
 		trains.trainsJson = JSON.parse(trains.trainsJson.replace(/&quot;/g, '"'));
-		console.log(trains.trainsJson);
 
 		// Fill displayJson with the columns we want
 		// basic number, departure_station, departure_date, arrival_station, arrival_date, total_seats

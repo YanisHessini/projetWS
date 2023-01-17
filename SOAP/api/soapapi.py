@@ -2,7 +2,7 @@ from pysimplesoap.server import SoapDispatcher, SOAPHandler, WSGISOAPHandler
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import requests
 
-ip = "192.168.1.28"
+ip = "192.168.1.45"
 port = "5000"
 
 dispatcher = SoapDispatcher(
@@ -82,6 +82,25 @@ dispatcher.register_function('GetTrainsSearch', gettrainssearch,
 			'passClass': int,
 			'nbTickets': int
 		})
+
+# get trains with a user
+
+def gettrainssearchuser(firstName, lastName):
+		# Get request to the API, params are in snake case
+		response = requests.get("http://" + ip + ":" + port + "/trains/search/user/"+str(firstName)+"-"+str(lastName))
+
+		return {'statusCode':response.status_code,'trainsJson':response.text}
+
+dispatcher.register_function('GetTrainsSearchUser', gettrainssearchuser,
+		returns={
+			'statusCode': int,
+			'trainsJson': str,
+		},
+		args={
+			'firstName': str,
+			'lastName': str,
+		})
+
 
 
 # book train function and registering
