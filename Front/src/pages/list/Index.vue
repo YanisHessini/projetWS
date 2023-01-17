@@ -88,7 +88,7 @@ onMounted(() => {
 
 	<!-- Welcome text to view the list of trains -->
 	<div class="flex flex-col justify-center items-center mt-10">
-		<h1 class="text-4xl font-bold text-gray-800">Liste des trains</h1>
+		<h1 class="text-4xl text-slate-100 font-bold bg-black p-6 rounded-xl shadow">Liste des trains</h1>
 	</div>
 
 	<!-- Div to list all input filters -->
