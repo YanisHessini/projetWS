@@ -37,9 +37,9 @@ const getTrains = async (event:any) => {
 		const xml =
 			`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="http://example.com/sample.wsdl">
 	 		<soapenv:Body>
-		 		<tns:GetTrainsByDate/>
+		 		<tns:GetTrainsByDate>
 				 	<tns:startDate>${event.target.tripStart.value.toString()}</tns:startDate>
-				<tns:GetTrainsByDate/>
+				</tns:GetTrainsByDate>
 	 		</soapenv:Body>
 			</soapenv:Envelope>`;
 
