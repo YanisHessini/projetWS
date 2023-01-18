@@ -31,17 +31,19 @@ dispatcher.register_function('GetAllTrains', getalltrains,
 
 
 # get trains by date function and registering
-def gettrainsbydate(date):
-		# Get request to the API
-		response = requests.get("http://" + ip + ":" + port + "/trains/departures/" + date)
-		return {'statusCode':response.status_code,'trainsJson':response}
+def gettrainsbydate(startDate):
+		response = requests.get("http://" + ip + ":" + port + "/trains/departures/" + startDate )
+		return {'statusCode':response.status_code,'trainsJson':response.text}
+
 
 dispatcher.register_function('GetTrainsByDate', gettrainsbydate,
 		returns={
 			'statusCode': int,
 			'trainsJson': str,
 		},
-		args={'date': str})
+		args={
+			'startDate': str,
+		})
 
 # get trains by id function 
 def gettrainsbyid(id):

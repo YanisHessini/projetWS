@@ -18,6 +18,63 @@ const trains = reactive({
 });
 
 // Function to get the list of trains with soap
+const getTrains = async (event:any) => {
+	try {
+		event.preventDefault()
+		if(event.target.tripStart.value === '')
+			return
+
+		console.log(event.target.tripStart.value)
+		trains.trainJson = []
+		trains.displayJson = JSON.parse('[]')
+		trains.loading = true
+
+		const getheaders = {
+			'Content-Type': 'text/xml;charset=UTF-8',
+			'SOAPAction': url + 'GetTrainsByDate',
+			'Accept': 'text/xml',
+		};
+		const xml =
+			`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="http://example.com/sample.wsdl">
+	 		<soapenv:Body>
+		 		<tns:GetTrainsByDate/>
+				 	<tns:startDate>${event.target.tripStart.value.toString()}</tns:startDate>
+				<tns:GetTrainsByDate/>
+	 		</soapenv:Body>
+			</soapenv:Envelope>`;
+
+		const { response } = await soapRequest({ url: url, headers: getheaders, xml: xml, timeout: 1000 }); // Optional timeout parameter(milliseconds)
+		const { headers, body, statusCode } = response;
+
+		// Isolate	 <trainsJson> from the response
+		trains.trainsJson = body.substring(body.indexOf("<trainsJson>") + 12, body.indexOf("</trainsJson>"));
+		// Parse the string that has &quot
+
+		trains.trainsJson = JSON.parse(trains.trainsJson.replace(/&quot;/g, '"'));
+
+		// Fill displayJson with the columns we want
+		// basic number, departure_station, departure_date, arrival_station, arrival_date, total_seats
+
+		for (let i = 0; i < trains.trainsJson.length; i++) {
+			trains.displayJson.push({
+				"id": trains.trainsJson[i].id,
+				"departure_station": trains.trainsJson[i].departure_station,
+				"departure_date": trains.trainsJson[i].departure_date,
+				"arrival_station": trains.trainsJson[i].arrival_station,
+				"arrival_date": trains.trainsJson[i].arrival_date,
+				"available_seats": trains.trainsJson[i].available_seats,
+			});
+		}
+
+		console.log(trains.displayJson);
+		trains.loading = false;
+
+	} catch (e) {
+		console.log(e);
+	}
+};
+
+// Function to get the list of trains with soap
 const getAllTrains = async () => {
 	try {
 		const getheaders = {
@@ -59,7 +116,7 @@ const getAllTrains = async () => {
 		trains.loading = false;
 
 	} catch (e) {
-		console.log(e.response.data);
+		console.log(e);
 	}
 };
 
@@ -93,7 +150,16 @@ onMounted(() => {
 
 	<!-- Div to list all input filters -->
 	<div class="flex flex-col justify-center items-center mt-10">
-
+		<form v-on:submit.prevent="getTrains">
+			<div class="flex items-center justify-center align-center">
+				<label for="start">Date de départ </label>
+				<input type="date" id="start" name="tripStart"
+				min="2023-18-01">
+				<button type="submit" class="bg-green-500 text-white text-xl px-10 py-1.5 mt-5 rounded-full font-medium hover:bg-opacity-75">
+					Actualiser
+				</button>
+			</div>
+		</form>
 		<!-- Div to list all trains -->
 		<div class="flex flex-col justify-center items-center mt-10 overflow-x-auto w-11/12">
 			<table class="flex table w-full" id="trains-list">

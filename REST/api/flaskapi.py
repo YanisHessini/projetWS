@@ -147,12 +147,11 @@ def get_train_arrival(arrival):
 @app.route("/trains/period/<period>",methods=['GET'])
 @cross_origin()
 def get_train_period(period):
-	date = period.split('-')
-	year = date[0]
-	month = date[1]
-	day = date[2]
+	date = period.split('+')
+	departure = date[0]
+	arrival = date[1]
 	mycursor = mydb.cursor()
-	mycursor.execute("SELECT * FROM trains WHERE YEAR(departure_date) = %s AND MONTH(departure_date) = %s AND DAY(departure_date) = %s", (year,month,day))
+	mycursor.execute("SELECT * FROM trains WHERE DATEDIFF(departure_date, %s) BETWEEN -1 AND 1 AND DATEDIFF(arrival_date, %s) BETWEEN -1 AND 1", (departure,arrival))
 	myresult = []
 	for r in mycursor.fetchall():
 		myresult.append(

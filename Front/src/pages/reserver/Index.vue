@@ -13,7 +13,7 @@ const train = reactive({
 
 const bookTrain = async (event: any) => {
 	try {
-		event.preventDefault()
+	
 
 		const bookheaders = {
 			'Content-Type': 'text/xml;charset=UTF-8',
@@ -36,7 +36,7 @@ const bookTrain = async (event: any) => {
 		const { response } = await soapRequest({ url: url, headers: bookheaders, xml: xml, timeout: 1000 }); // Optional timeout parameter(milliseconds)
 
 	} catch (e) {
-		console.log(e.response.data);
+		console.log(e);
 	}
 };
 
