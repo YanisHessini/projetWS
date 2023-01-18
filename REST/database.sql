@@ -42,25 +42,40 @@ create table IF NOT EXISTS reservations (
 
 INSERT INTO trains (departure_station, arrival_station, departure_date, arrival_date, total_seats, nb_class_1, nb_class_2, nb_class_3, 
 current_nb_class_1, current_nb_class_2, current_nb_class_3, price_class_1, price_class_2, price_class_3, complete, available_seats)
-SELECT 'Lyon', 'Marseille', '2022-12-26 15:00:00', '2022-12-26 17:00:00', 100, 10, 20, 70, 0, 0, 0, 100, 50, 20, false, 100
+SELECT 'Lyon', 'Marseille', '2023-01-19 15:00:00', '2023-01-19 17:00:00', 100, 20, 30, 50, 0, 0, 0, 120, 70, 30, false, 100
 UNION ALL
-SELECT 'Paris', 'Marseille', '2022-12-27 10:00:00', '2022-12-27 16:00:00', 100, 10, 20, 70, 0, 0, 0, 100, 50, 20, false, 100
+SELECT 'Paris', 'Marseille', '2023-01-20 10:00:00', '2023-01-20 16:00:00', 100, 20, 30, 50, 0, 0, 0, 120, 70, 30, false, 100
 UNION ALL
-SELECT 'Paris', 'Lyon', '2022-12-28 10:00:00', '2022-12-28 14:00:00', 100, 10, 20, 70, 0, 0, 0, 100, 50, 20, false, 100
+SELECT 'Paris', 'Lyon', '2023-01-21 10:00:00', '2023-01-21 14:00:00', 100, 20, 30, 50, 0, 0, 0, 120, 70, 30, false, 100
 UNION ALL
-SELECT 'Lyon', 'Marseille', '2022-12-29 15:00:00', '2022-12-29 17:00:00', 100, 10, 20, 70, 0, 0, 0, 100, 50, 20, false, 100
+SELECT 'Lyon', 'Nice', '2023-01-19 15:00:00', '2023-01-19 17:00:00', 100, 25, 35, 40, 0, 0, 0, 130, 80, 40, false, 100
 UNION ALL
-SELECT 'Paris', 'Marseille', '2022-12-30 10:00:00', '2022-12-30 16:00:00', 100, 10, 20, 70, 0, 0, 0, 100, 50, 20, false, 100
+SELECT 'Paris', 'Bordeaux', '2023-01-19 10:00:00', '2023-01-19 16:00:00', 100, 25, 35, 40, 0, 0, 0, 130, 80, 40, false, 100
 UNION ALL
-SELECT 'Paris', 'Lyon', '2022-12-31 10:00:00', '2022-12-31 14:00:00', 100, 10, 20, 70, 0, 0, 0, 100, 50, 20, false, 100
+SELECT 'Lille', 'Strasbourg', '2023-01-22 10:00:00', '2023-01-22 14:00:00', 100, 25, 35, 40, 0, 0, 0, 130, 80, 40, false, 100
 UNION ALL
-SELECT 'Lyon', 'Marseille', '2023-01-01 15:00:00', '2023-01-01 17:00:00', 100, 10, 20, 70, 0, 0, 0, 100, 50, 20, false, 100
+SELECT 'Marseille', 'Lyon', '2023-01-19 18:00:00', '2023-01-19 20:00:00', 100, 15, 20, 65, 0, 0, 0, 110, 60, 25, false, 100
 UNION ALL
-SELECT 'Paris', 'Lille', '2023-01-02 10:00:00', '2023-01-02 12:00:00', 100, 10, 20, 70, 0, 0, 0, 100, 50, 20, false, 100
+SELECT 'Nice', 'Paris', '2023-01-19 12:00:00', '2023-01-19 16:00:00', 100, 15, 20, 65, 0, 0, 0, 110, 60, 25, false, 100
 UNION ALL
-SELECT 'Lille', 'Paris', '2023-01-03 10:00:00', '2023-01-03 12:00:00', 100, 10, 20, 70, 0, 0, 0, 100, 50, 20, false, 100
+SELECT 'Bordeaux', 'Lille', '2023-01-19 12:00:00', '2023-01-19 14:00:00', 100, 15, 20, 65, 0, 0, 0, 110, 60, 25, false, 100
+UNION ALL
+SELECT 'Strasbourg', 'Paris', '2023-01-19 18:00:00', '2023-01-19 20:00:00', 100, 15, 20, 65, 0, 0, 0, 110, 60, 25, false, 100
+UNION ALL
+SELECT 'Lyon', 'Paris', '2023-01-19 08:00:00', '2023-01-19 10:00:00', 100, 15, 20, 65, 0, 0, 0, 110, 60, 25, false, 100
+UNION ALL
+SELECT 'Marseille', 'Nice', '2023-01-23 08:00:00', '2023-01-23 12:00:00', 100, 15, 20, 65, 0, 0, 0, 110, 60, 25, false, 100
+UNION ALL
+SELECT 'Paris', 'Bordeaux', '2023-01-25 15:00:00', '2023-01-25 17:00:00', 100, 15, 20, 65, 0, 0, 0, 110, 60, 25, false, 100
+UNION ALL
+SELECT 'Lille', 'Strasbourg', '2023-01-26 08:00:00', '2023-01-26 10:00:00', 100, 15, 20, 65, 0, 0, 0, 110, 60, 25, false, 100
+UNION ALL
+SELECT 'Nice', 'Lyon', '2023-01-27 14:00:00', '2023-01-27 16:00:00', 100, 15, 20, 65, 0, 0, 0, 110, 60, 25, false, 100
+UNION ALL
+SELECT 'Bordeaux', 'Marseille', '2023-01-19 08:00:00', '2023-01-19 12:00:00', 100, 15, 20, 65, 0, 0, 0, 110, 60, 25, false, 100
+UNION ALL
+SELECT 'Strasbourg', 'Paris', '2023-01-19 14:00:00', '2023-01-19 16:00:00', 100, 15, 20, 65, 0, 0, 0, 110, 60, 25, false, 100
 ;
-
 -- Trigger to decrease the number of available seats when a reservation is made
 DELIMITER //
 CREATE TRIGGER decrease_available_seats

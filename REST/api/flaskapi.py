@@ -10,6 +10,12 @@ app = Flask(__name__)
 cors = CORS(app, resources={r"*": {"origins": "*"}})
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+mydb = mysql.connector.connect(
+  host="db",
+  user="root",
+  password="root",
+  database="trains"
+)
 
 @app.route("/")
 def hello_world():
@@ -45,13 +51,6 @@ def get_trains():
 
   return myresult
 
-mydb = mysql.connector.connect(
-  host="db",
-  user="root",
-  password="root",
-  database="trains"
-)
-
 # Route basée sur l'ID du train
 @app.route("/trains/id/<id>",methods=['GET'])
 @cross_origin()
@@ -84,7 +83,7 @@ def get_train(id):
 @cross_origin()
 def get_train_departure(departure):
 	mycursor = mydb.cursor()
-	mycursor.execute("SELECT * FROM trains WHERE DATEDIFF(departure_date, %s) BETWEEN -1 AND 1", (departure,))
+	mycursor.execute("SELECT * FROM trains WHERE DATEDIFF(departure_date, %s) = 0", (departure,))
 	myresult = []
 
 	for r in mycursor.fetchall():

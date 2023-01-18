@@ -92,11 +92,13 @@ const getAllTrains = async () => {
 		const { response } = await soapRequest({ url: url, headers: getheaders, xml: xml, timeout: 1000 }); // Optional timeout parameter(milliseconds)
 		const { headers, body, statusCode } = response;
 
+		console.log(body.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>'))
+
 		// Isolate	 <trainsJson> from the response
 		trains.trainsJson = body.substring(body.indexOf("<trainsJson>") + 12, body.indexOf("</trainsJson>"));
 		// Parse the string that has &quot
 
-		trains.trainsJson = JSON.parse(trains.trainsJson.replace(/&quot;/g, '"'));
+		trains.trainsJson = JSON.parse(trains.trainsJson.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
 
 		// Fill displayJson with the columns we want
 		// basic number, departure_station, departure_date, arrival_station, arrival_date, total_seats
@@ -151,10 +153,12 @@ onMounted(() => {
 	<!-- Div to list all input filters -->
 	<div class="flex flex-col justify-center items-center mt-10">
 		<form v-on:submit.prevent="getTrains">
-			<div class="flex items-center justify-center align-center">
-				<label for="start">Date de départ </label>
-				<input type="date" id="start" name="tripStart"
-				min="2023-18-01">
+			<div class="flex flex-col">
+				<div class="flex items-center justify-center align-center">
+					<label for="start" class="mr-5">Date de départ</label>
+					<input type="date" id="start" name="tripStart" class="rounded-xl border-2 border-gray-400 p-2" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+					min="2023-18-01">
+				</div>
 				<button type="submit" class="bg-green-500 text-white text-xl px-10 py-1.5 mt-5 rounded-full font-medium hover:bg-opacity-75">
 					Actualiser
 				</button>
